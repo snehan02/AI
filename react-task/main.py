@@ -5,10 +5,6 @@ from langchain import hub
 from dotenv import load_dotenv
 import os
 
-# =====================================================
-# LOAD ENVIRONMENT VARIABLES
-# =====================================================
-
 load_dotenv()
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
@@ -16,15 +12,9 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 if not GROQ_API_KEY:
     raise ValueError("GROQ_API_KEY not found in .env file")
 
-# =====================================================
-# TASK STORAGE
-# =====================================================
 
 tasks = []
 
-# =====================================================
-# TOOLS
-# =====================================================
 
 @tool
 def add_task(task_name: str) -> str:
@@ -68,9 +58,7 @@ def search_task(keyword: str) -> str:
         [f"{i+1}. {task}" for i, task in enumerate(results)]
     )
 
-# =====================================================
-# LLM
-# =====================================================
+ 
 
 llm = ChatGroq(
     groq_api_key=GROQ_API_KEY,
@@ -78,9 +66,6 @@ llm = ChatGroq(
     temperature=0
 )
 
-# =====================================================
-# TOOLS LIST
-# =====================================================
 
 tools = [
     add_task,
@@ -88,15 +73,11 @@ tools = [
     search_task
 ]
 
-# =====================================================
-# REACT PROMPT
-# =====================================================
+
 
 prompt = hub.pull("hwchase17/react")
 
-# =====================================================
-# CREATE REACT AGENT
-# =====================================================
+
 
 agent = create_react_agent(
     llm=llm,
@@ -104,9 +85,7 @@ agent = create_react_agent(
     prompt=prompt
 )
 
-# =====================================================
-# AGENT EXECUTOR
-# =====================================================
+
 
 agent_executor = AgentExecutor(
     agent=agent,
@@ -117,9 +96,7 @@ agent_executor = AgentExecutor(
     early_stopping_method="force"
 )
 
-# =====================================================
-# CHAT LOOP
-# =====================================================
+
 
 print("===================================")
 print("      TASK MANAGER AGENT")
